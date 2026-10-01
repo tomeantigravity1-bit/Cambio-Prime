@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Câmbio Prime — Terminal Executivo & Conversor de Moedas</title>
+  <meta name="description" content="Conversor de moedas global com cotações interbancárias em tempo real e persistência contínua de histórico no Firebase Firestore." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'primary': '#00E676',
+            'primary-hover': '#00C853',
+            'primary-container': '#10b981',
+            'on-primary-container': '#003824',
+            'surface': '#0f131d',
+            'surface-dim': '#0a0e18',
+            'surface-container-lowest': '#070a12',
+            'surface-container-low': '#131722',
+            'surface-container': '#181d2a',
+            'surface-container-high': '#222736',
+            'surface-container-highest': '#2d3345',
+            'on-surface': '#dfe2f1',
+            'on-surface-variant': '#94a3b8',
+            'secondary': '#818cf8',
+            'tertiary': '#2dd4bf',
+            'error': '#f43f5e',
+            'warning': '#f59e0b'
+          },
+          fontFamily: {
+            'sans': ['Inter', 'sans-serif'],
+            'display': ['Plus Jakarta Sans', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      background-color: #0a0e18;
+      color: #dfe2f1;
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+    }
+    .tabular {
+      font-feature-settings: 'tnum' on, 'cv05' on, 'zero' on;
+    }
+    .glass-panel {
+      background: rgba(19, 23, 34, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+    }
+    .glass-card-elevated {
+      background: rgba(24, 29, 42, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+    }
+    .ticker-scroll {
+      display: flex;
+      width: max-content;
+      animation: ticker-slide 38s linear infinite;
+    }
+    .ticker-scroll:hover {
+      animation-play-state: paused;
+    }
+    @keyframes ticker-slide {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .btn-gradient-glow {
+      background: linear-gradient(135deg, #00E676 0%, #10B981 100%);
+      color: #022c1b;
+      box-shadow: 0 4px 20px -2px rgba(0, 230, 118, 0.35);
+      transition: all 0.2s ease-in-out;
+    }
+    .btn-gradient-glow:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 6px 26px 0px rgba(0, 230, 118, 0.55);
+      transform: translateY(-1px);
+    }
+    .btn-gradient-glow:active {
+      transform: translateY(0px) scale(0.98);
+    }
+    .animate-spin-once {
+      animation: spinOnce 0.4s ease;
+    }
+    @keyframes spinOnce {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(180deg); }
+    }
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0e18; }
+    ::-webkit-scrollbar-thumb { background: #222736; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2d3345; }
+  </style>
+
+  <!-- ==========================================
+       FIREBASE MODULAR SDK & FIRESTORE SETUP
+  =========================================== -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, where, orderBy, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    // ╔═════════════════════════════════════════════════════════════════════════════╗
+    // ║ ⚙️ FIREBASE CONFIG — Cole aqui as credenciais do seu Firebase Console      ║
+    // ║ (Configurações do Projeto > Seus Aplicativos > SDK para Web)               ║
+    // ╚═════════════════════════════════════════════════════════════════════════════╝
+    const defaultFirebaseConfig = {
+      apiKey: "AIzaSyDHBvV_FRbJaaqMUytqTUhYVWTw0fOF2P0",
+      authDomain: "cambio-prime.firebaseapp.com",
+      projectId: "cambio-prime",
+      storageBucket: "cambio-prime.firebasestorage.app",
+      messagingSenderId: "28380337421",
+      appId: "1:28380337421:web:36dcadb41da538503d8c44"
+    };
+
+    // Lê configuração salva via modal na UI, se houver
+    const savedConfig = localStorage.getItem('cambio_prime_firebase_config');
+    let firebaseConfig = defaultFirebaseConfig;
+    if (savedConfig) {
+      try {
+        firebaseConfig = JSON.parse(savedConfig);
+      } catch (e) {
+        console.warn("Configuração Firebase salva inválida:", e);
+      }
+    }
+
+    let app = null;
+    let auth = null;
+    let db = null;
+    let currentUserId = null;
+    let isFirebaseLive = false;
+    let unsubscribeSnapshot = null;
+
+    function initFirebaseService() {
+      try {
+        app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+        isFirebaseLive = true;
+        console.log("🔥 Firebase inicializado com sucesso.");
+      } catch (err) {
+        console.warn("⚠️ Firebase em modo simulado/local:", err.message);
+        isFirebaseLive = false;
+      }
+    }
+
+    initFirebaseService();
+
+    async function startAnonymousAuth(onUserReady) {
+      if (!isFirebaseLive || !auth) {
+        let localUid = localStorage.getItem('cambio_prime_local_uid');
+        if (!localUid) {
+          localUid = 'anon_dev_' + Math.random().toString(36).substring(2, 11);
+          localStorage.setItem('cambio_prime_local_uid', localUid);
+        }
+        currentUserId = localUid;
+        onUserReady(currentUserId, false);
+        return currentUserId;
+      }
+
+      try {
+        await signInAnonymously(auth);
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            currentUserId = user.uid;
+            console.log("👤 Usuário Anônimo Autenticado UID:", currentUserId);
+            onUserReady(currentUserId, true);
+          } else {
+            const fallbackUid = 'local_' + Math.random().toString(36).substring(2, 8);
+            currentUserId = fallbackUid;
+            onUserReady(fallbackUid, false);
+          }
+        });
+      } catch (authError) {
+        console.warn("Falha no signInAnonymously:", authError.message);
+        let fallbackUid = localStorage.getItem('cambio_prime_local_uid') || ('local_' + Date.now());
+        localStorage.setItem('cambio_prime_local_uid', fallbackUid);
+        currentUserId = fallbackUid;
+        onUserReady(fallbackUid, false);
+      }
+      return currentUserId;
+    }
+
+    async function saveConversionRecord(conversionData) {
+      const payload = {
+        userId: currentUserId || 'anon_user',
+        sendAmount: Number(conversionData.sendAmount),
+        fromCurrency: conversionData.fromCurrency,
+        receivedAmount: Number(conversionData.receivedAmount),
+        toCurrency: conversionData.toCurrency,
+        exchangeRate: Number(conversionData.exchangeRate),
+        spread: 0.00,
+        timestamp: isFirebaseLive ? serverTimestamp() : new Date().toISOString()
+      };
+
+      saveToLocalStorage(payload);
+
+      if (isFirebaseLive && db && currentUserId) {
+        try {
+          const docRef = await addDoc(collection(db, 'conversions'), payload);
+          return { success: true, id: docRef.id, mode: 'firestore' };
+        } catch (e) {
+          console.warn("Erro ao salvar no Firestore:", e);
+          return { success: true, mode: 'local', error: e.message };
+        }
+      }
+
+      return { success: true, mode: 'local' };
+    }
+
+    function listenToHistory(callback) {
+      if (unsubscribeSnapshot) {
+        unsubscribeSnapshot();
+        unsubscribeSnapshot = null;
+      }
+
+      if (isFirebaseLive && db && currentUserId) {
+        try {
+          const q = query(
+            collection(db, 'conversions'),
+            where('userId', '==', currentUserId),
+            orderBy('timestamp', 'desc')
+          );
+
+          unsubscribeSnapshot = onSnapshot(q, (snapshot) => {
+            const items = [];
+            snapshot.forEach((docSnap) => {
+              const data = docSnap.data();
+              items.push({ id: docSnap.id, ...data });
+            });
+            callback(items, 'firestore');
+          }, (err) => {
+            console.warn("Fallback onSnapshot para LocalStorage:", err.message);
+            callback(getFromLocalStorage(), 'local');
+          });
+          return;
+        } catch (e) {
+          console.warn("Erro na query do Firestore:", e);
+        }
+      }
+
+      callback(getFromLocalStorage(), 'local');
+    }
+
+    async function clearUserHistory() {
+      localStorage.removeItem('cambio_prime_history_mirror');
+
+      if (isFirebaseLive && db && currentUserId) {
+        try {
+          const q = query(collection(db, 'conversions'), where('userId', '==', currentUserId));
+          const snapshot = await getDocs(q);
+          const deletePromises = snapshot.docs.map(d => deleteDoc(doc(db, 'conversions', d.id)));
+          await Promise.all(deletePromises);
+        } catch (e) {
+          console.warn("Erro ao deletar no Firestore:", e);
+        }
+      }
+    }
+
+    function saveToLocalStorage(record) {
+      const history = getFromLocalStorage();
+      const newRec = {
+        id: 'loc_' + Date.now(),
+        ...record,
+        timestamp: new Date().toISOString()
+      };
+      history.unshift(newRec);
+      localStorage.setItem('cambio_prime_history_mirror', JSON.stringify(history.slice(0, 100)));
+    }
+
+    function getFromLocalStorage() {
+      try {
+        const stored = localStorage.getItem('cambio_prime_history_mirror');
+        return stored ? JSON.parse(stored) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    window.CambioFirebase = {
+      startAnonymousAuth,
+      saveConversionRecord,
+      listenToHistory,
+      clearUserHistory,
+      getFromLocalStorage,
+      updateFirebaseConfig: (newCfg) => {
+        localStorage.setItem('cambio_prime_firebase_config', JSON.stringify(newCfg));
+        location.reload();
+      }
+    };
+  </script>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-50 glass-panel shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-primary/15 border border-primary/30 flex items-center justify-center shadow-[0_0_15px_rgba(0,230,118,0.2)]">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none" class="w-6 h-6">
+              <rect width="40" height="40" rx="10" fill="#00E676" fill-opacity="0.15"/>
+              <circle cx="20" cy="20" r="14" stroke="#00E676" stroke-width="2.5" stroke-dasharray="2 4"/>
+              <path d="M14 18L18 14M18 14L22 18M18 14V26" stroke="#00E676" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M26 22L22 26M22 26L18 22M22 26V14" stroke="#34D399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-display font-extrabold text-xl tracking-tight text-white">Câmbio Prime</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase bg-surface-container-highest text-primary border border-primary/20">
+                PRO
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-1 bg-surface-container-lowest/70 p-1 rounded-xl border border-slate-800">
+          <a href="#conversor" class="px-4 py-1.5 rounded-lg text-sm font-semibold bg-primary/15 text-primary border border-primary/25 shadow-sm">
+            Conversor
+          </a>
+          <a href="#cotacoes" class="px-4 py-1.5 rounded-lg text-sm font-medium text-on-surface-variant hover:text-white hover:bg-surface-container-high transition-colors">
+            Cotações ao Vivo
+          </a>
+          <a href="#historico" class="px-4 py-1.5 rounded-lg text-sm font-medium text-on-surface-variant hover:text-white hover:bg-surface-container-high transition-colors">
+            Histórico
+          </a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <button id="btn-open-config" title="Configurações do Firebase" class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors border border-slate-800 cursor-pointer">
+            <span class="material-symbols-outlined text-lg">settings</span>
+          </button>
+
+          <div class="flex items-center gap-2.5 bg-surface-container-low px-3 py-1.5 rounded-xl border border-slate-800">
+            <div class="relative flex items-center justify-center">
+              <span class="w-2.5 h-2.5 rounded-full bg-primary animate-ping absolute"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-primary relative"></span>
+            </div>
+            <div class="text-left">
+              <div class="text-xs font-semibold text-white flex items-center gap-1">
+                <span id="auth-status-text">Conectando...</span>
+              </div>
+              <div class="text-[10px] font-mono text-on-surface-variant truncate max-w-[120px]" id="user-uid-badge">
+                UID: autenticando...
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Live Ticker Bar -->
+    <div id="cotacoes" class="bg-surface-container-lowest/90 border-t border-b border-slate-800/80 py-1.5 px-4 overflow-hidden flex items-center gap-4">
+      <div class="flex items-center gap-1.5 shrink-0 px-2 py-0.5 rounded bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider">
+        <span class="material-symbols-outlined text-sm">candlestick_chart</span>
+        <span>Mesa de Câmbio</span>
+      </div>
+      <div class="overflow-hidden flex-1 relative">
+        <div class="ticker-scroll flex items-center gap-8 text-xs font-mono font-medium" id="ticker-content">
+          <div class="flex items-center gap-2"><span class="font-bold text-white">USD/BRL</span> <span class="text-on-surface">R$ 5,6840</span> <span class="text-primary font-bold">+0,42%</span></div>
+          <div class="flex items-center gap-2"><span class="font-bold text-white">EUR/BRL</span> <span class="text-on-surface">R$ 6,1520</span> <span class="text-primary font-bold">+0,18%</span></div>
+          <div class="flex items-center gap-2"><span class="font-bold text-white">GBP/BRL</span> <span class="text-on-surface">R$ 7,3680</span> <span class="text-primary font-bold">+0,35%</span></div>
+          <div class="flex items-center gap-2"><span class="font-bold text-white">BTC/USD</span> <span class="text-on-surface">$ 64.820,00</span> <span class="text-primary font-bold">+2,40%</span></div>
+          <div class="flex items-center gap-2"><span class="font-bold text-white">CAD/BRL</span> <span class="text-on-surface">R$ 4,1240</span> <span class="text-error font-bold">-0,12%</span></div>
+          <div class="flex items-center gap-2"><span class="font-bold text-white">ARS/BRL</span> <span class="text-on-surface">R$ 0,0058</span> <span class="text-on-surface-variant">0,00%</span></div>
+          <div class="flex items-center gap-2"><span class="font-bold text-white">USD/BRL</span> <span class="text-on-surface">R$ 5,6840</span> <span class="text-primary font-bold">+0,42%</span></div>
+          <div class="flex items-center gap-2"><span class="font-bold text-white">EUR/BRL</span> <span class="text-on-surface">R$ 6,1520</span> <span class="text-primary font-bold">+0,18%</span></div>
+          <div class="flex items-center gap-2"><span class="font-bold text-white">GBP/BRL</span> <span class="text-on-surface">R$ 7,3680</span> <span class="text-primary font-bold">+0,35%</span></div>
+          <div class="flex items-center gap-2"><span class="font-bold text-white">BTC/USD</span> <span class="text-on-surface">$ 64.820,00</span> <span class="text-primary font-bold">+2,40%</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-10">
+
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800/80 pb-6">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/25 text-primary text-xs font-semibold uppercase tracking-wider mb-2">
+          <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+          Taxas Comerciais com Persistência Firebase
+        </div>
+        <h1 class="font-display text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          Conversor de Moedas Global
+        </h1>
+        <p class="text-on-surface-variant text-sm sm:text-base max-w-2xl mt-1">
+          Cotações atualizadas em tempo real com taxa interbancária. Suas conversões são gravadas na nuvem sob seu identificador único.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="glass-panel px-4 py-2.5 rounded-xl text-xs flex items-center gap-2.5">
+          <span class="material-symbols-outlined text-primary text-xl">cloud_sync</span>
+          <div>
+            <div class="font-bold text-white">Firestore Conectado</div>
+            <div class="text-on-surface-variant text-[11px]">Sincronização em tempo real</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONVERSOR & TENDENCIA -->
+    <section id="conversor" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <div class="lg:col-span-8 glass-card-elevated rounded-2xl p-6 sm:p-8 flex flex-col gap-6">
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-800/60">
+          <span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm text-primary">bolt</span> Atalhos de Destino Rápido:
+          </span>
+          <div class="flex flex-wrap items-center gap-1.5" id="quick-tabs-container">
+            <button class="quick-dest-btn px-3 py-1 rounded-lg bg-surface-container text-xs font-bold text-on-surface hover:bg-primary/20 hover:text-primary transition-all border border-slate-700/60 cursor-pointer" data-cur="USD">🇺🇸 USD</button>
+            <button class="quick-dest-btn px-3 py-1 rounded-lg bg-surface-container text-xs font-bold text-on-surface hover:bg-primary/20 hover:text-primary transition-all border border-slate-700/60 cursor-pointer" data-cur="EUR">🇪🇺 EUR</button>
+            <button class="quick-dest-btn px-3 py-1 rounded-lg bg-surface-container text-xs font-bold text-on-surface hover:bg-primary/20 hover:text-primary transition-all border border-slate-700/60 cursor-pointer" data-cur="GBP">🇬🇧 GBP</button>
+            <button class="quick-dest-btn px-3 py-1 rounded-lg bg-surface-container text-xs font-bold text-on-surface hover:bg-primary/20 hover:text-primary transition-all border border-slate-700/60 cursor-pointer" data-cur="CAD">🇨🇦 CAD</button>
+            <button class="quick-dest-btn px-3 py-1 rounded-lg bg-surface-container text-xs font-bold text-on-surface hover:bg-primary/20 hover:text-primary transition-all border border-slate-700/60 cursor-pointer" data-cur="JPY">🇯🇵 JPY</button>
+            <button class="quick-dest-btn px-3 py-1 rounded-lg bg-surface-container text-xs font-bold text-on-surface hover:bg-primary/20 hover:text-primary transition-all border border-slate-700/60 cursor-pointer" data-cur="ARS">🇦🇷 ARS</button>
+            <button class="quick-dest-btn px-3 py-1 rounded-lg bg-surface-container text-xs font-bold text-on-surface hover:bg-primary/20 hover:text-primary transition-all border border-slate-700/60 cursor-pointer" data-cur="BTC">₿ BTC</button>
+          </div>
+        </div>
+
+        <div class="relative flex flex-col md:flex-row items-stretch gap-4">
+
+          <div class="flex-1 bg-surface-container-low p-5 rounded-xl border border-slate-800 flex flex-col justify-between focus-within:border-primary/60 transition-colors">
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider" for="input-amount">Você envia</label>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded-md bg-surface-container-high text-primary" id="badge-source-cur">BRL</span>
+            </div>
+            
+            <div class="flex items-center gap-3">
+              <input
+                id="input-amount"
+                type="number"
+                min="0.01"
+                step="any"
+                value="1000"
+                class="w-full bg-transparent font-display text-2xl sm:text-3xl font-bold text-white outline-none tabular"
+                placeholder="0,00"
+              />
+              <div class="relative shrink-0">
+                <select id="select-source" class="appearance-none bg-surface-container-high text-white font-bold text-sm pl-3 pr-8 py-2 rounded-xl border border-slate-700 cursor-pointer focus:outline-none focus:border-primary">
+                  <option value="BRL" selected>🇧🇷 BRL</option>
+                  <option value="USD">🇺🇸 USD</option>
+                  <option value="EUR">🇪🇺 EUR</option>
+                  <option value="GBP">🇬🇧 GBP</option>
+                  <option value="CAD">🇨🇦 CAD</option>
+                  <option value="JPY">🇯🇵 JPY</option>
+                  <option value="CHF">🇨🇭 CHF</option>
+                  <option value="AUD">🇦🇺 AUD</option>
+                  <option value="CNY">🇨🇳 CNY</option>
+                  <option value="ARS">🇦🇷 ARS</option>
+                  <option value="CLP">🇨🇱 CLP</option>
+                  <option value="BTC">₿ BTC</option>
+                </select>
+                <span class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 text-lg">expand_more</span>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-1.5 mt-4 pt-3 border-t border-slate-800/80">
+              <span class="text-[11px] text-on-surface-variant font-medium">Incrementar:</span>
+              <button class="chip-add-btn text-xs px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface hover:text-primary hover:bg-slate-700 transition-colors cursor-pointer" data-add="100">+100</button>
+              <button class="chip-add-btn text-xs px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface hover:text-primary hover:bg-slate-700 transition-colors cursor-pointer" data-add="500">+500</button>
+              <button class="chip-add-btn text-xs px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface hover:text-primary hover:bg-slate-700 transition-colors cursor-pointer" data-add="1000">+1.000</button>
+              <button class="chip-add-btn text-xs px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface hover:text-primary hover:bg-slate-700 transition-colors cursor-pointer" data-add="5000">+5.000</button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center -my-2 md:-my-0 md:-mx-2 z-10">
+            <button
+              id="btn-swap-currencies"
+              type="button"
+              title="Inverter Moedas"
+              class="w-12 h-12 rounded-full bg-surface-container-highest border border-primary/40 text-primary flex items-center justify-center shadow-lg hover:bg-primary hover:text-surface-dim active:scale-95 transition-all cursor-pointer"
+            >
+              <span class="material-symbols-outlined text-2xl" id="swap-icon">swap_horiz</span>
+            </button>
+          </div>
+
+          <div class="flex-1 bg-surface-container-low p-5 rounded-xl border border-slate-800 flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Você recebe (estimado)</span>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded-md bg-primary/15 text-primary" id="badge-target-cur">USD</span>
+            </div>
+
+            <div class="flex items-center justify-between gap-3">
+              <div class="font-display text-2xl sm:text-3xl font-extrabold text-primary truncate tabular" id="display-target-amount">
+                $ 0,00
+              </div>
+              <div class="relative shrink-0">
+                <select id="select-target" class="appearance-none bg-surface-container-high text-white font-bold text-sm pl-3 pr-8 py-2 rounded-xl border border-slate-700 cursor-pointer focus:outline-none focus:border-primary">
+                  <option value="USD" selected>🇺🇸 USD</option>
+                  <option value="BRL">🇧🇷 BRL</option>
+                  <option value="EUR">🇪🇺 EUR</option>
+                  <option value="GBP">🇬🇧 GBP</option>
+                  <option value="CAD">🇨🇦 CAD</option>
+                  <option value="JPY">🇯🇵 JPY</option>
+                  <option value="CHF">🇨🇭 CHF</option>
+                  <option value="AUD">🇦🇺 AUD</option>
+                  <option value="CNY">🇨🇳 CNY</option>
+                  <option value="ARS">🇦🇷 ARS</option>
+                  <option value="CLP">🇨🇱 CLP</option>
+                  <option value="BTC">₿ BTC</option>
+                </select>
+                <span class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 text-lg">expand_more</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between mt-4 pt-3 border-t border-slate-800/80 text-xs text-on-surface-variant font-mono">
+              <span id="display-inverse-rate">1 USD = 5,6840 BRL</span>
+              <span class="text-primary font-semibold flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs">bolt</span> Spread 0,00%
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+          <div class="flex items-center gap-3 text-sm text-on-surface-variant">
+            <span class="material-symbols-outlined text-primary text-xl">info</span>
+            <div>
+              <div class="font-bold text-white text-sm" id="display-direct-rate">1 BRL = 0,1759 USD</div>
+              <div class="text-xs text-on-surface-variant">Garantia de cotação interbancária sem taxas ocultas</div>
+            </div>
+          </div>
+
+          <button
+            id="btn-save-conversion"
+            type="button"
+            class="btn-gradient-glow w-full sm:w-auto px-8 py-3.5 rounded-xl font-display font-extrabold text-sm flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span class="material-symbols-outlined text-xl">check_circle</span>
+            <span>Salvar Conversão</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- TENDENCIA -->
+      <div class="lg:col-span-4 glass-panel rounded-2xl p-6 flex flex-col gap-5">
+        
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Tendência de Paridade</div>
+            <div class="font-display text-xl font-extrabold text-white mt-0.5" id="chart-pair-label">BRL / USD</div>
+          </div>
+          <span class="px-2.5 py-1 rounded-full bg-primary/15 text-primary text-xs font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">trending_up</span> +0,42% 24h
+          </span>
+        </div>
+
+        <div class="relative w-full h-32 flex items-end">
+          <svg class="w-full h-full overflow-visible" viewBox="0 0 320 100" fill="none" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#00E676" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#00E676" stop-opacity="0.0"/>
+              </linearGradient>
+            </defs>
+            <path d="M 0,85 Q 40,75 80,55 T 160,65 T 240,25 T 320,12 L 320,100 L 0,100 Z" fill="url(#chartGradient)"/>
+            <path d="M 0,85 Q 40,75 80,55 T 160,65 T 240,25 T 320,12" stroke="#00E676" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="320" cy="12" r="5" fill="#00E676" class="animate-pulse"/>
+          </svg>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div class="bg-surface-container-low p-3 rounded-xl border border-slate-800">
+            <div class="text-on-surface-variant">Máxima (24h)</div>
+            <div class="font-bold text-white text-sm mt-0.5 tabular" id="stat-max-val">0,1780</div>
+          </div>
+          <div class="bg-surface-container-low p-3 rounded-xl border border-slate-800">
+            <div class="text-on-surface-variant">Mínima (24h)</div>
+            <div class="font-bold text-white text-sm mt-0.5 tabular" id="stat-min-val">0,1745</div>
+          </div>
+          <div class="bg-surface-container-low p-3 rounded-xl border border-slate-800">
+            <div class="text-on-surface-variant">Vol. Interbancário</div>
+            <div class="font-bold text-white text-sm mt-0.5 tabular">$ 4,82 Bi</div>
+          </div>
+          <div class="bg-surface-container-low p-3 rounded-xl border border-slate-800">
+            <div class="text-on-surface-variant">Volatilidade 7D</div>
+            <div class="font-bold text-tertiary text-sm mt-0.5">Baixa (0,31%)</div>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-on-surface-variant flex items-center justify-between border-t border-slate-800 pt-3">
+          <span>Fechamento anterior: <strong class="text-white tabular" id="stat-close-val">0,1750</strong></span>
+          <span class="text-primary font-semibold flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span> Live
+          </span>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- CARDS INFORMATIVOS -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="glass-panel p-5 rounded-2xl flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-primary/15 border border-primary/30 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-primary text-2xl">lock</span>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-white">Trava de Câmbio de 15 Min</h2>
+          <p class="text-xs text-on-surface-variant mt-0.5">Cotação garantida para execução sem oscilações.</p>
+        </div>
+      </div>
+
+      <div class="glass-panel p-5 rounded-2xl flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-secondary/15 border border-secondary/30 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-secondary text-2xl">account_balance</span>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-white">Liquidação Instantânea</h2>
+          <p class="text-xs text-on-surface-variant mt-0.5">Integração nativa via PIX, TED e Wire internacional Swift.</p>
+        </div>
+      </div>
+
+      <div class="glass-panel p-5 rounded-2xl flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-tertiary/15 border border-tertiary/30 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-tertiary text-2xl">price_check</span>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-white">Spread Zero Fiduciário</h2>
+          <p class="text-xs text-on-surface-variant mt-0.5">Margem transparente sem acréscimos operacionais camuflados.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORICO -->
+    <section id="historico" class="flex flex-col gap-4">
+      
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-xl">history</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Auditoria & Registros na Nuvem</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-warning/15 text-warning border border-warning/30">
+              🔥 Firebase Firestore
+            </span>
+          </div>
+          <h2 class="font-display text-2xl font-extrabold text-white mt-1">
+            Histórico de Conversões Realizadas
+          </h2>
+          <p class="text-xs sm:text-sm text-on-surface-variant">
+            Seus cálculos persistidos na nuvem — sincronizados em tempo real e mantidos após fechar ou reabrir o app.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            id="btn-clear-history"
+            type="button"
+            class="px-4 py-2 rounded-xl bg-surface-container hover:bg-error/20 hover:text-error text-on-surface-variant text-xs font-bold transition-all border border-slate-800 flex items-center gap-1.5 cursor-pointer"
+          >
+            <span class="material-symbols-outlined text-sm">delete_sweep</span>
+            <span>Limpar Histórico</span>
+          </button>
+
+          <button
+            id="btn-export-csv"
+            type="button"
+            class="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-white text-xs font-bold transition-all border border-slate-700 flex items-center gap-1.5 cursor-pointer"
+          >
+            <span class="material-symbols-outlined text-sm">file_download</span>
+            <span>Exportar CSV</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="glass-card-elevated rounded-2xl overflow-hidden shadow-xl border border-slate-800">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse min-w-[720px]">
+            <thead>
+              <tr class="bg-surface-container-highest/60 text-on-surface-variant text-[11px] font-bold uppercase tracking-wider border-b border-slate-800">
+                <th class="py-3.5 px-6">Data & Hora</th>
+                <th class="py-3.5 px-4">Par de Moedas</th>
+                <th class="py-3.5 px-4">Valor Original</th>
+                <th class="py-3.5 px-4">Taxa Aplicada</th>
+                <th class="py-3.5 px-4">Valor Convertido</th>
+                <th class="py-3.5 px-4">Status / Destino</th>
+                <th class="py-3.5 px-6 text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body" class="divide-y divide-slate-800/80 text-sm">
+              <tr>
+                <td colspan="7" class="py-12 text-center text-on-surface-variant">
+                  <div class="flex flex-col items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-4xl text-primary animate-pulse">cloud_sync</span>
+                    <span class="text-sm font-medium">Sincronizando histórico do Firestore...</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bg-surface-container-low px-6 py-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-on-surface-variant gap-2">
+          <div class="flex items-center gap-4">
+            <span>Total de registros: <strong class="text-white" id="history-total-count">0</strong></span>
+            <span>Persistência: <strong class="text-primary font-mono" id="history-storage-mode">Firestore Realtime</strong></span>
+          </div>
+          <div class="text-[11px]">
+            Identificador da Sessão: <span class="font-mono text-white" id="footer-uid-display">-</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- MODAL CONFIG -->
+  <div id="modal-config" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card-elevated max-w-lg w-full rounded-2xl p-6 border border-slate-700 shadow-2xl flex flex-col gap-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-warning text-2xl">local_fire_department</span>
+          <h3 class="font-display font-bold text-lg text-white">Configurações do Firebase</h3>
+        </div>
+        <button id="btn-close-modal" class="p-1 text-slate-400 hover:text-white transition-colors cursor-pointer">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <p class="text-xs text-on-surface-variant">
+        Cole abaixo suas credenciais obtidas no Console do Firebase (<strong>Configurações do Projeto > Seus Aplicativos > SDK para Web</strong>).
+      </p>
+
+      <div class="flex flex-col gap-3 text-xs">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">API Key</label>
+          <input type="text" id="cfg-api-key" class="w-full bg-surface-container p-2.5 rounded-lg border border-slate-700 text-white font-mono text-xs focus:border-primary outline-none" placeholder="AIzaSy..." />
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Auth Domain</label>
+            <input type="text" id="cfg-auth-domain" class="w-full bg-surface-container p-2.5 rounded-lg border border-slate-700 text-white font-mono text-xs focus:border-primary outline-none" placeholder="seu-app.firebaseapp.com" />
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Project ID</label>
+            <input type="text" id="cfg-project-id" class="w-full bg-surface-container p-2.5 rounded-lg border border-slate-700 text-white font-mono text-xs focus:border-primary outline-none" placeholder="seu-projeto-id" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Storage Bucket</label>
+            <input type="text" id="cfg-storage-bucket" class="w-full bg-surface-container p-2.5 rounded-lg border border-slate-700 text-white font-mono text-xs focus:border-primary outline-none" placeholder="seu-app.appspot.com" />
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">App ID</label>
+            <input type="text" id="cfg-app-id" class="w-full bg-surface-container p-2.5 rounded-lg border border-slate-700 text-white font-mono text-xs focus:border-primary outline-none" placeholder="1:123456:web:abcdef" />
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+        <button id="btn-reset-config" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white cursor-pointer">Restaurar Padrão</button>
+        <button id="btn-save-config" class="btn-gradient-glow px-6 py-2 rounded-xl text-xs font-bold text-surface-dim cursor-pointer">Salvar e Conectar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-surface-container-lowest border-t border-slate-800/80 py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-on-surface-variant">
+      <div class="flex items-center gap-2">
+        <span class="font-display font-bold text-white">Câmbio Prime</span>
+        <span>• Terminal Executivo de Câmbio & Cotações em Tempo Real</span>
+      </div>
+      <div>
+        Persistência via Firebase Authentication & Cloud Firestore
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const ratesToUSD = {
+        USD: 1.0,
+        BRL: 5.6840,
+        EUR: 0.9235,
+        GBP: 0.7718,
+        CAD: 1.3850,
+        JPY: 153.40,
+        CHF: 0.8650,
+        AUD: 1.5120,
+        CNY: 7.1250,
+        ARS: 985.00,
+        CLP: 948.50,
+        BTC: 0.0000154
+      };
+
+      const flags = {
+        USD: '🇺🇸', BRL: '🇧🇷', EUR: '🇪🇺', GBP: '🇬🇧',
+        CAD: '🇨🇦', JPY: '🇯🇵', CHF: '🇨🇭', AUD: '🇦🇺',
+        CNY: '🇨🇳', ARS: '🇦🇷', CLP: '🇨🇱', BTC: '₿'
+      };
+
+      const symbols = {
+        USD: '$', BRL: 'R$', EUR: '€', GBP: '£',
+        CAD: 'C$', JPY: '¥', CHF: 'CHF', AUD: 'A$',
+        CNY: '¥', ARS: '$', CLP: '$', BTC: '₿'
+      };
+
+      const inputAmount = document.getElementById('input-amount');
+      const selectSource = document.getElementById('select-source');
+      const selectTarget = document.getElementById('select-target');
+      const displayTargetAmount = document.getElementById('display-target-amount');
+      const displayDirectRate = document.getElementById('display-direct-rate');
+      const displayInverseRate = document.getElementById('display-inverse-rate');
+      const badgeSourceCur = document.getElementById('badge-source-cur');
+      const badgeTargetCur = document.getElementById('badge-target-cur');
+      const chartPairLabel = document.getElementById('chart-pair-label');
+      const statMaxVal = document.getElementById('stat-max-val');
+      const statMinVal = document.getElementById('stat-min-val');
+      const statCloseVal = document.getElementById('stat-close-val');
+      const btnSwap = document.getElementById('btn-swap-currencies');
+      const swapIcon = document.getElementById('swap-icon');
+      const btnSaveConversion = document.getElementById('btn-save-conversion');
+      const historyTableBody = document.getElementById('history-table-body');
+      const historyTotalCount = document.getElementById('history-total-count');
+      const historyStorageMode = document.getElementById('history-storage-mode');
+      const authStatusText = document.getElementById('auth-status-text');
+      const userUidBadge = document.getElementById('user-uid-badge');
+      const footerUidDisplay = document.getElementById('footer-uid-display');
+      const btnClearHistory = document.getElementById('btn-clear-history');
+      const btnExportCsv = document.getElementById('btn-export-csv');
+
+      let currentHistoryData = [];
+
+      function getRate(from, to) {
+        if (from === to) return 1.0;
+        const fromInUSD = 1 / ratesToUSD[from];
+        return fromInUSD * ratesToUSD[to];
+      }
+
+      function formatCurrency(val, cur) {
+        if (cur === 'BTC') {
+          return val.toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 6 });
+        }
+        if (val < 0.01 && val > 0) {
+          return val.toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 6 });
+        }
+        return val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function formatRate(rate, cur) {
+        if (cur === 'BTC' || rate < 0.001) {
+          return rate.toFixed(6);
+        }
+        return rate.toFixed(4);
+      }
+
+      function updateCalculations() {
+        const val = parseFloat(inputAmount.value) || 0;
+        const from = selectSource.value;
+        const to = selectTarget.value;
+
+        const rate = getRate(from, to);
+        const inverseRate = 1 / rate;
+        const converted = val * rate;
+
+        displayTargetAmount.textContent = `${symbols[to]} ${formatCurrency(converted, to)}`;
+        displayDirectRate.textContent = `1 ${from} = ${formatRate(rate, to)} ${to}`;
+        displayInverseRate.textContent = `1 ${to} = ${formatRate(inverseRate, from)} ${from}`;
+
+        badgeSourceCur.textContent = from;
+        badgeTargetCur.textContent = to;
+        chartPairLabel.textContent = `${from} / ${to}`;
+
+        statMaxVal.textContent = formatRate(rate * 1.008, to);
+        statMinVal.textContent = formatRate(rate * 0.992, to);
+        statCloseVal.textContent = formatRate(rate * 0.998, to);
+      }
+
+      inputAmount.addEventListener('input', updateCalculations);
+      selectSource.addEventListener('change', updateCalculations);
+      selectTarget.addEventListener('change', updateCalculations);
+
+      btnSwap.addEventListener('click', () => {
+        const temp = selectSource.value;
+        selectSource.value = selectTarget.value;
+        selectTarget.value = temp;
+
+        swapIcon.classList.add('animate-spin-once');
+        setTimeout(() => swapIcon.classList.remove('animate-spin-once'), 400);
+
+        updateCalculations();
+      });
+
+      document.querySelectorAll('.chip-add-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const add = parseFloat(btn.getAttribute('data-add')) || 0;
+          const current = parseFloat(inputAmount.value) || 0;
+          inputAmount.value = (current + add).toFixed(2);
+          updateCalculations();
+        });
+      });
+
+      document.querySelectorAll('.quick-dest-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetCur = btn.getAttribute('data-cur');
+          if (targetCur === selectSource.value) {
+            selectSource.value = selectTarget.value;
+          }
+          selectTarget.value = targetCur;
+          updateCalculations();
+        });
+      });
+
+      async function fetchLiveExchangeRates() {
+        try {
+          const res = await fetch('https://open.er-api.com/v6/latest/USD');
+          const data = await res.json();
+          if (data && data.rates) {
+            Object.keys(ratesToUSD).forEach(c => {
+              if (c !== 'BTC' && data.rates[c]) {
+                ratesToUSD[c] = data.rates[c];
+              }
+            });
+            updateCalculations();
+            console.log("📈 Cotações ao vivo atualizadas com sucesso.");
+          }
+        } catch (e) {
+          console.log("Usando cotações locais offline.");
+        }
+      }
+
+      fetchLiveExchangeRates();
+      setInterval(fetchLiveExchangeRates, 60000);
+
+      function renderHistoryTable(items, sourceMode) {
+        currentHistoryData = items;
+        historyTotalCount.textContent = items.length;
+        historyStorageMode.textContent = sourceMode === 'firestore' ? 'Firestore (Nuvem)' : 'LocalStorage (Offline)';
+
+        if (!items || items.length === 0) {
+          historyTableBody.innerHTML = `
+            <tr>
+              <td colspan="7" class="py-10 text-center text-on-surface-variant text-xs">
+                Nenhuma conversão registrada ainda. Clique em "Salvar Conversão" acima para criar seu primeiro registro.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        historyTableBody.innerHTML = items.map((item, index) => {
+          let dateStr = 'Agora';
+          if (item.timestamp) {
+            if (item.timestamp.seconds) {
+              const d = new Date(item.timestamp.seconds * 1000);
+              dateStr = d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            } else if (typeof item.timestamp === 'string') {
+              const d = new Date(item.timestamp);
+              dateStr = d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            }
+          }
+
+          const fromCur = item.fromCurrency || 'BRL';
+          const toCur = item.toCurrency || 'USD';
+          const sendAmt = Number(item.sendAmount || item.amount || 0);
+          const rcvAmt = Number(item.receivedAmount || item.convertedAmount || 0);
+          const rateVal = Number(item.exchangeRate || 0);
+
+          return `
+            <tr class="hover:bg-surface-container/60 transition-colors">
+              <td class="py-3.5 px-6 font-mono text-xs text-on-surface-variant">${dateStr}</td>
+              <td class="py-3.5 px-4 font-bold text-white">
+                <span class="inline-flex items-center gap-1.5">
+                  <span>${flags[fromCur] || ''} ${fromCur}</span>
+                  <span class="material-symbols-outlined text-xs text-primary">arrow_forward</span>
+                  <span>${flags[toCur] || ''} ${toCur}</span>
+                </span>
+              </td>
+              <td class="py-3.5 px-4 font-bold text-on-surface tabular">${symbols[fromCur] || ''} ${formatCurrency(sendAmt, fromCur)}</td>
+              <td class="py-3.5 px-4 font-mono text-xs text-on-surface-variant tabular">${formatRate(rateVal, toCur)}</td>
+              <td class="py-3.5 px-4 font-extrabold text-primary tabular">${symbols[toCur] || ''} ${formatCurrency(rcvAmt, toCur)}</td>
+              <td class="py-3.5 px-4">
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary/15 text-primary">
+                  <span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Concluído
+                </span>
+              </td>
+              <td class="py-3.5 px-6 text-right">
+                <div class="flex items-center justify-end gap-1">
+                  <button class="btn-repeat-calc p-1.5 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors cursor-pointer" title="Repetir Conversão" data-from="${fromCur}" data-to="${toCur}" data-amount="${sendAmt}">
+                    <span class="material-symbols-outlined text-base">replay</span>
+                  </button>
+                  <button class="btn-download-receipt p-1.5 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-white transition-colors cursor-pointer" title="Baixar Comprovante" data-index="${index}">
+                    <span class="material-symbols-outlined text-base">receipt_long</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        document.querySelectorAll('.btn-repeat-calc').forEach(btn => {
+          btn.addEventListener('click', () => {
+            selectSource.value = btn.getAttribute('data-from');
+            selectTarget.value = btn.getAttribute('data-to');
+            inputAmount.value = btn.getAttribute('data-amount');
+            updateCalculations();
+            document.getElementById('conversor').scrollIntoView({ behavior: 'smooth' });
+          });
+        });
+
+        document.querySelectorAll('.btn-download-receipt').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-index'), 10);
+            const item = currentHistoryData[idx];
+            if (!item) return;
+
+            const receiptCode = 'CP-' + Math.floor(100000 + Math.random() * 900000);
+            const content = [
+              '=====================================================',
+              '            CÂMBIO PRIME — COMPROVANTE OFICIAL       ',
+              '=====================================================',
+              `Código de Autenticação: #${receiptCode}`,
+              `Data / Hora: ${new Date().toLocaleString('pt-BR')}`,
+              `ID do Usuário (UID): ${item.userId || 'Anônimo'}`,
+              '-----------------------------------------------------',
+              `Moeda de Origem:   ${item.fromCurrency}`,
+              `Valor Enviado:     ${symbols[item.fromCurrency] || ''} ${formatCurrency(item.sendAmount, item.fromCurrency)}`,
+              `Moeda de Destino:  ${item.toCurrency}`,
+              `Valor Convertido:  ${symbols[item.toCurrency] || ''} ${formatCurrency(item.receivedAmount, item.toCurrency)}`,
+              `Taxa Interbancária:${item.exchangeRate}`,
+              `Spread Operacional: 0.00% (Garantido)`,
+              '=====================================================',
+              'Instituição Autorizada pelo Banco Central do Brasil'
+            ].join('\n');
+
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `comprovante_${receiptCode}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+          });
+        });
+      }
+
+      if (window.CambioFirebase) {
+        window.CambioFirebase.startAnonymousAuth((uid, isLive) => {
+          userUidBadge.textContent = 'UID: ' + uid.substring(0, 10) + '...';
+          footerUidDisplay.textContent = uid;
+          authStatusText.textContent = isLive ? 'Firebase Ativo' : 'Sessão Local';
+
+          window.CambioFirebase.listenToHistory((data, mode) => {
+            renderHistoryTable(data, mode);
+          });
+        });
+      }
+
+      btnSaveConversion.addEventListener('click', async () => {
+        const sendVal = parseFloat(inputAmount.value) || 0;
+        if (sendVal <= 0) {
+          alert('Por favor, digite um valor válido para converter.');
+          return;
+        }
+
+        const from = selectSource.value;
+        const to = selectTarget.value;
+        const rate = getRate(from, to);
+        const rcvVal = sendVal * rate;
+
+        const originalText = btnSaveConversion.innerHTML;
+        btnSaveConversion.innerHTML = `<span class="material-symbols-outlined text-xl animate-spin">progress_activity</span> Gravando...`;
+        btnSaveConversion.disabled = true;
+
+        await window.CambioFirebase.saveConversionRecord({
+          sendAmount: sendVal,
+          fromCurrency: from,
+          receivedAmount: rcvVal,
+          toCurrency: to,
+          exchangeRate: rate
+        });
+
+        btnSaveConversion.innerHTML = `<span class="material-symbols-outlined text-xl">done_all</span> Salvo com Sucesso!`;
+        setTimeout(() => {
+          btnSaveConversion.innerHTML = originalText;
+          btnSaveConversion.disabled = false;
+        }, 1200);
+      });
+
+      btnClearHistory.addEventListener('click', async () => {
+        if (confirm('Deseja realmente limpar todos os registros do seu histórico?')) {
+          await window.CambioFirebase.clearUserHistory();
+          renderHistoryTable([], 'firestore');
+        }
+      });
+
+      btnExportCsv.addEventListener('click', () => {
+        if (!currentHistoryData || currentHistoryData.length === 0) {
+          alert('Não há dados no histórico para exportar.');
+          return;
+        }
+
+        const headers = ['Data', 'Moeda Origem', 'Valor Enviado', 'Moeda Destino', 'Valor Recebido', 'Taxa Aplicada', 'UID'];
+        const rows = currentHistoryData.map(item => {
+          let dateStr = 'Agora';
+          if (item.timestamp && item.timestamp.seconds) {
+            dateStr = new Date(item.timestamp.seconds * 1000).toLocaleString('pt-BR');
+          } else if (typeof item.timestamp === 'string') {
+            dateStr = new Date(item.timestamp).toLocaleString('pt-BR');
+          }
+          return [
+            `"${dateStr}"`,
+            `"${item.fromCurrency}"`,
+            item.sendAmount,
+            `"${item.toCurrency}"`,
+            item.receivedAmount,
+            item.exchangeRate,
+            `"${item.userId || ''}"`
+          ].join(';');
+        });
+
+        const csvContent = '\uFEFF' + [headers.join(';'), ...rows].join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `historico_cambio_prime_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      const modalConfig = document.getElementById('modal-config');
+      const btnOpenConfig = document.getElementById('btn-open-config');
+      const btnCloseModal = document.getElementById('btn-close-modal');
+      const btnSaveConfig = document.getElementById('btn-save-config');
+      const btnResetConfig = document.getElementById('btn-reset-config');
+
+      btnOpenConfig.addEventListener('click', () => {
+        const saved = localStorage.getItem('cambio_prime_firebase_config');
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            document.getElementById('cfg-api-key').value = parsed.apiKey || '';
+            document.getElementById('cfg-auth-domain').value = parsed.authDomain || '';
+            document.getElementById('cfg-project-id').value = parsed.projectId || '';
+            document.getElementById('cfg-storage-bucket').value = parsed.storageBucket || '';
+            document.getElementById('cfg-app-id').value = parsed.appId || '';
+          } catch(e) {}
+        }
+        modalConfig.classList.remove('hidden');
+        modalConfig.classList.add('flex');
+      });
+
+      btnCloseModal.addEventListener('click', () => {
+        modalConfig.classList.add('hidden');
+        modalConfig.classList.remove('flex');
+      });
+
+      btnSaveConfig.addEventListener('click', () => {
+        const newConfig = {
+          apiKey: document.getElementById('cfg-api-key').value.trim(),
+          authDomain: document.getElementById('cfg-auth-domain').value.trim(),
+          projectId: document.getElementById('cfg-project-id').value.trim(),
+          storageBucket: document.getElementById('cfg-storage-bucket').value.trim(),
+          appId: document.getElementById('cfg-app-id').value.trim()
+        };
+        if (!newConfig.apiKey || !newConfig.projectId) {
+          alert('Por favor, preencha pelo menos API Key e Project ID.');
+          return;
+        }
+        window.CambioFirebase.updateFirebaseConfig(newConfig);
+      });
+
+      btnResetConfig.addEventListener('click', () => {
+        localStorage.removeItem('cambio_prime_firebase_config');
+        location.reload();
+      });
+
+      updateCalculations();
+    });
+  </script>
+</body>
+</html>

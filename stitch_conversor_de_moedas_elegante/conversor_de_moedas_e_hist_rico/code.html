@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>Câmbio Prime</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"secondary":"#c0c1ff","secondary-fixed-dim":"#c0c1ff","outline":"#86948a","error-container":"#93000a","surface-container-low":"#171b26","tertiary":"#4fdbc8","secondary-container":"#3131c0","surface-dim":"#0f131d","on-error-container":"#ffdad6","background":"#0f131d","primary-fixed-dim":"#4edea3","surface-container-highest":"#313540","on-primary-fixed-variant":"#005236","primary":"#4edea3","primary-fixed":"#6ffbbe","surface-tint":"#4edea3","tertiary-fixed-dim":"#4fdbc8","inverse-on-surface":"#2c303b","inverse-surface":"#dfe2f1","on-primary-fixed":"#002113","surface-container":"#1c1f2a","on-surface":"#dfe2f1","on-secondary-fixed":"#07006c","on-surface-variant":"#bbcabf","surface-variant":"#313540","primary-container":"#10b981","surface-container-lowest":"#0a0e18","surface-bright":"#353944","on-tertiary-container":"#004139","tertiary-container":"#0db6a4","on-background":"#dfe2f1","outline-variant":"#3c4a42","on-secondary-fixed-variant":"#2f2ebe","surface":"#0f131d","on-secondary-container":"#b0b2ff","tertiary-fixed":"#71f8e4","on-tertiary-fixed":"#00201c","secondary-fixed":"#e1e0ff","on-secondary":"#1000a9","on-primary-container":"#00422b","surface-container-high":"#262a35","error":"#ffb4ab","on-tertiary":"#003731","on-error":"#690005","inverse-primary":"#006c49","on-tertiary-fixed-variant":"#005048","on-primary":"#003824"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-sm":"0.5rem","gutter-sm":"0.75rem","margin-lg":"3rem","margin-sm":"1rem","space-xl":"2.5rem","space-lg":"1.5rem","space-xs":"0.25rem","gutter":"1.25rem","space-md":"1rem","gutter-lg":"1.75rem","margin":"2rem"},"fontFamily":{"body-md":["Inter"],"label-lg":["Inter"],"headline-sm":["Plus Jakarta Sans"],"tabular-numeric-md":["Inter"],"headline-lg":["Plus Jakarta Sans"],"label-md":["Inter"],"headline-lg-mobile":["Plus Jakarta Sans"],"display-hero-mobile":["Plus Jakarta Sans"],"body-sm":["Inter"],"label-sm":["Inter"],"tabular-numeric-lg":["Inter"],"headline-md":["Plus Jakarta Sans"],"body-lg":["Inter"],"display-hero":["Plus Jakarta Sans"]},"fontSize":{"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"headline-sm":["18px",{"lineHeight":"26px","letterSpacing":"-0.01em","fontWeight":"600"}],"tabular-numeric-md":["16px",{"lineHeight":"24px","letterSpacing":"-0.01em","fontWeight":"500"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"500"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"display-hero-mobile":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.05em","fontWeight":"600"}],"tabular-numeric-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"display-hero":["48px",{"lineHeight":"56px","letterSpacing":"-0.03em","fontWeight":"700"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased min-h-screen"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.25)]"><div class="h-28 w-full"><div class="h-16 px-gutter-lg flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><img alt="Logo Câmbio Prime" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Wrc88dblX0Oh80Wqk5giTBTf-MdYySZDXxMu362hIr12p9_W0qAI_LOMkbQua8w2QrvLToTcio78Y70rFrX_rQV5EMLRIduJz2hPBcKKsTu8KIq7FcQyiqMleeB3gLgKUbDpeRmd0XBoc3Ev6jJa702uBMIdIXOH4HMRfRHsdUKVd-9L36YMSMfBhSgqM3DVcxfKQb2UBlGdflblL-D1XEcuO1fBS8-XlgFwetmvTK8ueovU9iHdFyZA"/><span class="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight">Câmbio Prime</span></div><div class="hidden xl:flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface-container-high"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="font-label-md text-label-md text-primary font-medium">Mercado Aberto • Cotações em tempo real</span></div></div><nav class="hidden md:flex items-center gap-space-sm" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-[0_0_16px_-4px_rgba(16,185,129,0.3)]"><a aria-current="page" class="px-space-md py-space-sm transition-colors bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-[0_0_16px_-4px_rgba(16,185,129,0.3)]" data-path="conversor" href="#">Conversor</a><a class="px-space-md py-space-sm rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="cotacoes-ao-vivo" href="#">Cotações ao Vivo</a><a class="px-space-md py-space-sm rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="historico" href="#">Histórico</a><a class="px-space-md py-space-sm rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="alertas" href="#">Alertas</a></nav><div class="flex items-center gap-space-md"><div class="hidden sm:flex flex-col text-right"><span class="font-label-md text-label-md text-on-surface font-medium">Mesa de Câmbio</span><span class="font-body-sm text-body-sm text-on-surface-variant">Terminal Executivo</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div><div class="h-12 bg-surface-container-lowest/80 px-gutter-lg flex items-center justify-between overflow-x-auto gap-space-lg"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px] text-tertiary">candlestick_chart</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Live Ticker</span></div><div class="flex items-center gap-space-xl flex-1 justify-start md:justify-center overflow-x-auto"><div class="flex items-center gap-space-sm shrink-0"><span class="font-label-md text-label-md font-semibold text-on-surface">USD/BRL</span><span class="font-tabular-numeric-md text-tabular-numeric-md text-on-surface">R$ 5,4235</span><span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded-full bg-primary/10 text-primary font-medium flex items-center"><span class="material-symbols-outlined text-[12px]">arrow_drop_up</span>+0,42%</span></div><div class="flex items-center gap-space-sm shrink-0"><span class="font-label-md text-label-md font-semibold text-on-surface">EUR/BRL</span><span class="font-tabular-numeric-md text-tabular-numeric-md text-on-surface">R$ 5,9180</span><span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded-full bg-error/10 text-error font-medium flex items-center"><span class="material-symbols-outlined text-[12px]">arrow_drop_down</span>-0,18%</span></div><div class="flex items-center gap-space-sm shrink-0"><span class="font-label-md text-label-md font-semibold text-on-surface">GBP/BRL</span><span class="font-tabular-numeric-md text-tabular-numeric-md text-on-surface">R$ 6,8942</span><span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded-full bg-primary/10 text-primary font-medium flex items-center"><span class="material-symbols-outlined text-[12px]">arrow_drop_up</span>+0,12%</span></div><div class="flex items-center gap-space-sm shrink-0"><span class="font-label-md text-label-md font-semibold text-on-surface">BTC/USD</span><span class="font-tabular-numeric-md text-tabular-numeric-md text-on-surface">$ 64.280,00</span><span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded-full bg-primary/10 text-primary font-medium flex items-center"><span class="material-symbols-outlined text-[12px]">arrow_drop_up</span>+2,65%</span></div></div><div class="hidden lg:flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm shrink-0"><span class="material-symbols-outlined text-[14px]">sync</span><span>Atualizado há 4s</span></div></div></div></header><main class="w-full pt-28 bg-background min-h-screen"><div class="flex flex-col w-full">
+<!-- Radial Ambient Lighting Accent -->
+<div class="relative w-full overflow-hidden px-gutter md:px-margin-lg py-space-xl">
+<div class="absolute top-12 left-1/2 -translate-x-1/2 w-[820px] h-[340px] bg-primary/10 rounded-full blur-[140px] pointer-events-none -z-10"></div>
+<div class="absolute top-48 right-12 w-[380px] h-[380px] bg-tertiary/10 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+<!-- Header / Hero Compacto -->
+<section class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-space-lg mb-space-xl">
+<div class="flex flex-col gap-space-xs max-w-2xl">
+<div class="flex items-center gap-space-xs mb-space-xs">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+            Taxas Interbancárias em Tempo Real
+          </span>
+<span class="text-on-surface-variant font-label-sm text-label-sm hidden sm:inline">• 0% Spread Simulado</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">
+          Conversor de Moedas Global
+        </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+          Cotações atualizadas em tempo real com taxa de câmbio comercial e spread zero simulado para operações executivas e cross-border.
+        </p>
+</div>
+<!-- Trust Badges -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-low shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-tertiary">public</span>
+<span class="font-label-md text-label-md text-on-surface">12 Moedas Globais</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-low shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-primary">update</span>
+<span class="font-label-md text-label-md text-on-surface">Atualizado há 1 min</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-low shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary">verified_user</span>
+<span class="font-label-md text-label-md text-on-surface">Auditoria Bacen</span>
+</div>
+</div>
+</section>
+<!-- Main Grid: Conversor + Trend Analytics -->
+<section class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter-lg mb-space-xl items-start">
+<!-- Conversor Card (Col 1 to 8) -->
+<div class="lg:col-span-8 flex flex-col gap-space-lg bg-surface-container-low/90 backdrop-blur-xl p-space-lg md:p-space-xl rounded-xl shadow-xl">
+<!-- Popular Quick-Tabs -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Atalhos de Destino Rápido:</span>
+<div class="flex flex-wrap items-center gap-1.5" id="quick-currency-tabs">
+<button class="quick-cur-btn px-space-sm py-1 rounded bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright transition-colors" data-currency="USD" type="button">USD</button>
+<button class="quick-cur-btn px-space-sm py-1 rounded bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright transition-colors" data-currency="EUR" type="button">EUR</button>
+<button class="quick-cur-btn px-space-sm py-1 rounded bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright transition-colors" data-currency="GBP" type="button">GBP</button>
+<button class="quick-cur-btn px-space-sm py-1 rounded bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright transition-colors" data-currency="CAD" type="button">CAD</button>
+<button class="quick-cur-btn px-space-sm py-1 rounded bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright transition-colors" data-currency="JPY" type="button">JPY</button>
+<button class="quick-cur-btn px-space-sm py-1 rounded bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright transition-colors" data-currency="ARS" type="button">ARS</button>
+<button class="quick-cur-btn px-space-sm py-1 rounded bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-bright transition-colors" data-currency="BTC" type="button">BTC</button>
+</div>
+</div>
+<!-- Conversion Matrix Inputs -->
+<div class="relative flex flex-col md:flex-row items-stretch gap-space-md">
+<!-- Source Card -->
+<div class="flex-1 flex flex-col justify-between p-space-lg rounded-xl bg-surface-container shadow-inner">
+<div class="flex items-center justify-between gap-space-sm mb-space-sm">
+<label class="font-label-md text-label-md text-on-surface-variant font-medium" for="amount-input">Você envia</label>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-surface-container-high text-tertiary" id="source-symbol-tag">Origem</span>
+</div>
+<div class="flex items-center justify-between gap-space-sm">
+<input class="w-full bg-transparent font-tabular-numeric-lg text-tabular-numeric-lg text-on-surface font-bold outline-none focus:text-primary transition-colors" id="amount-input" min="0" placeholder="0.00" step="any" type="number" value="1000"/>
+<!-- Source Currency Pill -->
+<div class="relative shrink-0">
+<select class="appearance-none bg-surface-container-high text-on-surface font-label-lg text-label-lg pl-3 pr-8 py-2 rounded-lg cursor-pointer hover:bg-surface-bright transition-colors focus:outline-none" id="source-select">
+<option value="USD">🇺🇸 USD</option>
+<option selected="" value="BRL">🇧🇷 BRL</option>
+<option value="EUR">🇪🇺 EUR</option>
+<option value="GBP">🇬🇧 GBP</option>
+<option value="JPY">🇯🇵 JPY</option>
+<option value="CAD">🇨🇦 CAD</option>
+<option value="CHF">🇨🇭 CHF</option>
+<option value="AUD">🇦🇺 AUD</option>
+<option value="CNY">🇨🇳 CNY</option>
+<option value="ARS">🇦🇷 ARS</option>
+<option value="CLP">🇨🇱 CLP</option>
+<option value="BTC">₿ BTC</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[18px] text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<!-- Increment Quick Chips -->
+<div class="flex flex-wrap items-center gap-1.5 mt-space-md pt-space-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant mr-1">Adicionar:</span>
+<button class="chip-add text-xs px-2 py-1 rounded bg-surface-container-high text-on-surface hover:text-primary hover:bg-surface-bright transition-colors" data-add="100" type="button">+100</button>
+<button class="chip-add text-xs px-2 py-1 rounded bg-surface-container-high text-on-surface hover:text-primary hover:bg-surface-bright transition-colors" data-add="500" type="button">+500</button>
+<button class="chip-add text-xs px-2 py-1 rounded bg-surface-container-high text-on-surface hover:text-primary hover:bg-surface-bright transition-colors" data-add="1000" type="button">+1.000</button>
+<button class="chip-add text-xs px-2 py-1 rounded bg-surface-container-high text-on-surface hover:text-primary hover:bg-surface-bright transition-colors" data-add="5000" type="button">+5.000</button>
+</div>
+</div>
+<!-- Swap Floating Button -->
+<div class="flex items-center justify-center -my-3 md:-my-0 md:-mx-4 z-20">
+<button aria-label="Inverter Moedas" class="group w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-transform duration-300" id="swap-currencies-btn" title="Inverter Moedas" type="button">
+<span class="material-symbols-outlined text-[24px] group-hover:rotate-180 transition-transform duration-500">swap_horiz</span>
+</button>
+</div>
+<!-- Target Card -->
+<div class="flex-1 flex flex-col justify-between p-space-lg rounded-xl bg-surface-container shadow-inner">
+<div class="flex items-center justify-between gap-space-sm mb-space-sm">
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">Você recebe (estimado)</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-surface-container-high text-primary" id="target-symbol-tag">Destino</span>
+</div>
+<div class="flex items-center justify-between gap-space-sm">
+<div class="font-tabular-numeric-lg text-tabular-numeric-lg text-primary font-bold tracking-tight truncate" id="target-amount-display">
+                0,00
+              </div>
+<!-- Target Currency Pill -->
+<div class="relative shrink-0">
+<select class="appearance-none bg-surface-container-high text-on-surface font-label-lg text-label-lg pl-3 pr-8 py-2 rounded-lg cursor-pointer hover:bg-surface-bright transition-colors focus:outline-none" id="target-select">
+<option selected="" value="USD">🇺🇸 USD</option>
+<option value="BRL">🇧🇷 BRL</option>
+<option value="EUR">🇪🇺 EUR</option>
+<option value="GBP">🇬🇧 GBP</option>
+<option value="JPY">🇯🇵 JPY</option>
+<option value="CAD">🇨🇦 CAD</option>
+<option value="CHF">🇨🇭 CHF</option>
+<option value="AUD">🇦🇺 AUD</option>
+<option value="CNY">🇨🇳 CNY</option>
+<option value="ARS">🇦🇷 ARS</option>
+<option value="CLP">🇨🇱 CLP</option>
+<option value="BTC">₿ BTC</option>
+</select>
+<span class="material-symbols-outlined pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[18px] text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<!-- Detail Subtext / Real-time quote -->
+<div class="flex items-center justify-between mt-space-md pt-space-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="inverse-rate-display">
+                1 USD = 5,6800 BRL
+              </span>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary">
+<span class="material-symbols-outlined text-[14px]">bolt</span> Spread 0.00%
+              </span>
+</div>
+</div>
+</div>
+<!-- Exchange Status Bar & CTA -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-md pt-space-xs">
+<div class="flex items-center gap-space-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px] text-tertiary">info</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold" id="direct-rate-display">1 BRL = 0,1760 USD</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Garantia de cotação interbancária sem taxas ocultas</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm w-full sm:w-auto">
+<button class="w-full sm:w-auto flex items-center justify-center gap-2 px-space-xl py-3 rounded-lg bg-primary-container text-on-primary-container font-label-lg text-label-lg font-bold shadow-lg hover:brightness-110 active:scale-95 transition-all" id="convert-save-btn" type="button">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+              Salvar Conversão
+            </button>
+</div>
+</div>
+</div>
+<!-- Trend & Fast Metrics Side Card (Col 9 to 12) -->
+<div class="lg:col-span-4 flex flex-col gap-space-md bg-surface-container-low/90 backdrop-blur-xl p-space-lg rounded-xl shadow-xl">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Tendência de Paridade</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface" id="chart-pair-title">USD / BRL</span>
+</div>
+<span class="px-space-xs py-1 rounded bg-primary/10 text-primary font-label-sm text-label-sm font-semibold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +0,42% 24h
+          </span>
+</div>
+<!-- Inline SVG Line Chart -->
+<div class="relative w-full h-36 flex items-end">
+<svg class="w-full h-full overflow-visible" fill="none" preserveaspectratio="none" viewbox="0 0 320 120">
+<defs>
+<lineargradient id="chartGlow" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#4edea3" stop-opacity="0.32"></stop>
+<stop offset="100%" stop-color="#4edea3" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- Area gradient -->
+<path d="M 0,105 Q 40,95 80,70 T 160,80 T 240,30 T 320,15 L 320,120 L 0,120 Z" fill="url(#chartGlow)"></path>
+<!-- Trend stroke line -->
+<path d="M 0,105 Q 40,95 80,70 T 160,80 T 240,30 T 320,15" stroke="#4edea3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+<!-- Pulse Marker on Current Price -->
+<circle class="animate-pulse" cx="320" cy="15" fill="#4edea3" r="5"></circle>
+</svg>
+</div>
+<!-- Fast Stats Metric Grid -->
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs">
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Máxima (24h)</span>
+<span class="font-tabular-numeric-md text-tabular-numeric-md text-on-surface font-semibold" id="stat-max">R$ 5,7120</span>
+</div>
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Mínima (24h)</span>
+<span class="font-tabular-numeric-md text-tabular-numeric-md text-on-surface font-semibold" id="stat-min">R$ 5,6310</span>
+</div>
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Vol. Interbancário</span>
+<span class="font-tabular-numeric-md text-tabular-numeric-md text-on-surface font-semibold">$ 4,82 Bi</span>
+</div>
+<div class="flex flex-col p-space-sm rounded-lg bg-surface-container">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Volatilidade 7D</span>
+<span class="font-tabular-numeric-md text-tabular-numeric-md text-tertiary font-semibold">Baixa (0,31%)</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm pt-space-xs">
+<span>Fechamento anterior: R$ 5,6562</span>
+<span class="text-primary font-medium">Mesa Ativa</span>
+</div>
+</div>
+</section>
+<!-- Visual Divider & Editorial Feature Strip -->
+<section class="max-w-7xl mx-auto mb-space-xl grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<div class="flex items-center gap-space-md p-space-md rounded-xl bg-surface-container-low shadow-sm">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[22px]">lock</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Trava de Câmbio de 15 Min</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Preço garantido para execução sem slippage comercial.</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md p-space-md rounded-xl bg-surface-container-low shadow-sm">
+<div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[22px]">account_balance</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Liquidação Instantânea</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Integração nativa via PIX, TED e Wire internacional Swift.</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md p-space-md rounded-xl bg-surface-container-low shadow-sm">
+<div class="w-10 h-10 rounded-lg bg-tertiary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary text-[22px]">price_check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Spread Zero Fiduciário</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Margem transparente sem acréscimos operacionais camuflados.</span>
+</div>
+</div>
+</section>
+<!-- Section: Histórico de Conversões Recentes -->
+<section class="max-w-7xl mx-auto flex flex-col gap-space-lg">
+<!-- History Section Header -->
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">history</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Auditoria &amp; Registros</span>
+</div>
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Histórico de Conversões Realizadas</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Registro cronológico de cotações salvas e simulações com cotação garantida.</p>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="flex items-center gap-1.5 px-space-md py-space-sm rounded-lg bg-surface-container-high text-on-surface-variant hover:text-error hover:bg-surface-bright transition-colors font-label-md text-label-md" id="clear-history-btn" type="button">
+<span class="material-symbols-outlined text-[16px]">delete_sweep</span>
+            Limpar Histórico
+          </button>
+<button class="flex items-center gap-1.5 px-space-md py-space-sm rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-bright transition-colors font-label-md text-label-md" id="export-history-btn" type="button">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+            Exportar CSV
+          </button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="w-full bg-surface-container-low rounded-xl shadow-lg overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[760px]">
+<thead>
+<tr class="bg-surface-container-highest/40 font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">
+<th class="py-space-md px-space-lg">Data &amp; Hora</th>
+<th class="py-space-md px-space-md">Par de Moedas</th>
+<th class="py-space-md px-space-md">Valor Original</th>
+<th class="py-space-md px-space-md">Taxa Aplicada</th>
+<th class="py-space-md px-space-md">Valor Convertido</th>
+<th class="py-space-md px-space-md">Status</th>
+<th class="py-space-md px-space-lg text-right">Ações</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface" id="history-table-body">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-space-md px-space-lg font-tabular-numeric-md text-on-surface-variant">
+                Hoje, 14:32
+              </td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs font-label-md text-label-md font-semibold">
+<span>🇺🇸 USD</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary">arrow_forward</span>
+<span>🇧🇷 BRL</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-numeric-md font-semibold text-on-surface">
+                $ 1.250,00
+              </td>
+<td class="py-space-md px-space-md font-tabular-numeric-md text-on-surface-variant">
+                5,6800
+              </td>
+<td class="py-space-md px-space-md font-tabular-numeric-md font-bold text-primary">
+                R$ 7.100,00
+              </td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Concluído
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="btn-repeat p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" data-amount="1250" data-source="USD" data-target="BRL" title="Repetir Conversão" type="button">
+<span class="material-symbols-outlined text-[18px]">replay</span>
+</button>
+<button class="btn-receipt p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Exportar Comprovante" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-space-md px-space-lg font-tabular-numeric-md text-on-surface-variant">
+                Hoje, 11:15
+              </td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs font-label-md text-label-md font-semibold">
+<span>🇪🇺 EUR</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary">arrow_forward</span>
+<span>🇧🇷 BRL</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-numeric-md font-semibold text-on-surface">
+                € 450,00
+              </td>
+<td class="py-space-md px-space-md font-tabular-numeric-md text-on-surface-variant">
+                6,1500
+              </td>
+<td class="py-space-md px-space-md font-tabular-numeric-md font-bold text-primary">
+                R$ 2.767,50
+              </td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Concluído
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="btn-repeat p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" data-amount="450" data-source="EUR" data-target="BRL" title="Repetir Conversão" type="button">
+<span class="material-symbols-outlined text-[18px]">replay</span>
+</button>
+<button class="btn-receipt p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Exportar Comprovante" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-space-md px-space-lg font-tabular-numeric-md text-on-surface-variant">
+                Ontem, 18:40
+              </td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs font-label-md text-label-md font-semibold">
+<span>🇬🇧 GBP</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary">arrow_forward</span>
+<span>🇧🇷 BRL</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-numeric-md font-semibold text-on-surface">
+                £ 800,00
+              </td>
+<td class="py-space-md px-space-md font-tabular-numeric-md text-on-surface-variant">
+                7,3600
+              </td>
+<td class="py-space-md px-space-md font-tabular-numeric-md font-bold text-primary">
+                R$ 5.888,00
+              </td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Concluído
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="btn-repeat p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" data-amount="800" data-source="GBP" data-target="BRL" title="Repetir Conversão" type="button">
+<span class="material-symbols-outlined text-[18px]">replay</span>
+</button>
+<button class="btn-receipt p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Exportar Comprovante" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-space-md px-space-lg font-tabular-numeric-md text-on-surface-variant">
+                Ontem, 16:05
+              </td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs font-label-md text-label-md font-semibold">
+<span>🇯🇵 JPY</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary">arrow_forward</span>
+<span>🇧🇷 BRL</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-numeric-md font-semibold text-on-surface">
+                ¥ 50.000
+              </td>
+<td class="py-space-md px-space-md font-tabular-numeric-md text-on-surface-variant">
+                0,0370
+              </td>
+<td class="py-space-md px-space-md font-tabular-numeric-md font-bold text-primary">
+                R$ 1.850,00
+              </td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Concluído
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="btn-repeat p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" data-amount="50000" data-source="JPY" data-target="BRL" title="Repetir Conversão" type="button">
+<span class="material-symbols-outlined text-[18px]">replay</span>
+</button>
+<button class="btn-receipt p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Exportar Comprovante" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-space-md px-space-lg font-tabular-numeric-md text-on-surface-variant">
+                24 Out, 09:20
+              </td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs font-label-md text-label-md font-semibold">
+<span>🇨🇦 CAD</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary">arrow_forward</span>
+<span>🇧🇷 BRL</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-numeric-md font-semibold text-on-surface">
+                C$ 600,00
+              </td>
+<td class="py-space-md px-space-md font-tabular-numeric-md text-on-surface-variant">
+                4,1200
+              </td>
+<td class="py-space-md px-space-md font-tabular-numeric-md font-bold text-primary">
+                R$ 2.472,00
+              </td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Concluído
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="btn-repeat p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" data-amount="600" data-source="CAD" data-target="BRL" title="Repetir Conversão" type="button">
+<span class="material-symbols-outlined text-[18px]">replay</span>
+</button>
+<button class="btn-receipt p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Exportar Comprovante" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-space-md px-space-lg font-tabular-numeric-md text-on-surface-variant">
+                23 Out, 15:50
+              </td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs font-label-md text-label-md font-semibold">
+<span>🇦🇷 ARS</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary">arrow_forward</span>
+<span>🇧🇷 BRL</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-numeric-md font-semibold text-on-surface">
+                $ 150.000
+              </td>
+<td class="py-space-md px-space-md font-tabular-numeric-md text-on-surface-variant">
+                0,0056
+              </td>
+<td class="py-space-md px-space-md font-tabular-numeric-md font-bold text-primary">
+                R$ 840,00
+              </td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Concluído
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="btn-repeat p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" data-amount="150000" data-source="ARS" data-target="BRL" title="Repetir Conversão" type="button">
+<span class="material-symbols-outlined text-[18px]">replay</span>
+</button>
+<button class="btn-receipt p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Exportar Comprovante" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 7 -->
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-space-md px-space-lg font-tabular-numeric-md text-on-surface-variant">
+                22 Out, 19:12
+              </td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs font-label-md text-label-md font-semibold">
+<span>₿ BTC</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary">arrow_forward</span>
+<span>🇺🇸 USD</span>
+</div>
+</td>
+<td class="py-space-md px-space-md font-tabular-numeric-md font-semibold text-on-surface">
+                0.05 BTC
+              </td>
+<td class="py-space-md px-space-md font-tabular-numeric-md text-on-surface-variant">
+                550.000,00
+              </td>
+<td class="py-space-md px-space-md font-tabular-numeric-md font-bold text-primary">
+                $ 27.500,00
+              </td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Concluído
+                </span>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="btn-repeat p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" data-amount="0.05" data-source="BTC" data-target="USD" title="Repetir Conversão" type="button">
+<span class="material-symbols-outlined text-[18px]">replay</span>
+</button>
+<button class="btn-receipt p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Exportar Comprovante" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+<!-- Interactive JavaScript Engine -->
+<script>
+    (function() {
+      // Exchange rates relative to USD (1 USD = rate units)
+      const ratesToUSD = {
+        USD: 1.0,
+        BRL: 5.6800,
+        EUR: 0.9230,
+        GBP: 0.7715,
+        JPY: 153.50,
+        CAD: 1.3850,
+        CHF: 0.8650,
+        AUD: 1.5120,
+        CNY: 7.1250,
+        ARS: 985.00,
+        CLP: 948.50,
+        BTC: 0.0000155 // ~ 64,500 USD
+      };
+
+      const flags = {
+        USD: '🇺🇸 USD',
+        BRL: '🇧🇷 BRL',
+        EUR: '🇪🇺 EUR',
+        GBP: '🇬🇧 GBP',
+        JPY: '🇯🇵 JPY',
+        CAD: '🇨🇦 CAD',
+        CHF: '🇨🇭 CHF',
+        AUD: '🇦🇺 AUD',
+        CNY: '🇨🇳 CNY',
+        ARS: '🇦🇷 ARS',
+        CLP: '🇨🇱 CLP',
+        BTC: '₿ BTC'
+      };
+
+      const symbols = {
+        USD: '$',
+        BRL: 'R$',
+        EUR: '€',
+        GBP: '£',
+        JPY: '¥',
+        CAD: 'C$',
+        CHF: 'CHF',
+        AUD: 'A$',
+        CNY: '¥',
+        ARS: '$',
+        CLP: '$',
+        BTC: '₿'
+      };
+
+      const amountInput = document.getElementById('amount-input');
+      const sourceSelect = document.getElementById('source-select');
+      const targetSelect = document.getElementById('target-select');
+      const targetDisplay = document.getElementById('target-amount-display');
+      const swapBtn = document.getElementById('swap-currencies-btn');
+      const directRateDisplay = document.getElementById('direct-rate-display');
+      const inverseRateDisplay = document.getElementById('inverse-rate-display');
+      const chartPairTitle = document.getElementById('chart-pair-title');
+      const statMax = document.getElementById('stat-max');
+      const statMin = document.getElementById('stat-min');
+      const convertSaveBtn = document.getElementById('convert-save-btn');
+      const historyTableBody = document.getElementById('history-table-body');
+      const clearHistoryBtn = document.getElementById('clear-history-btn');
+      const exportHistoryBtn = document.getElementById('export-history-btn');
+
+      function getExchangeRate(from, to) {
+        if (from === to) return 1.0;
+        const fromInUSD = 1 / ratesToUSD[from];
+        return fromInUSD * ratesToUSD[to];
+      }
+
+      function formatNumber(num, currency) {
+        if (currency === 'BTC') {
+          return num.toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 6 });
+        }
+        if (num >= 1000) {
+          return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        if (num < 0.01) {
+          return num.toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 6 });
+        }
+        return num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+      }
+
+      function calculate() {
+        const val = parseFloat(amountInput.value) || 0;
+        const from = sourceSelect.value;
+        const to = targetSelect.value;
+
+        const rate = getExchangeRate(from, to);
+        const inverseRate = 1 / rate;
+        const converted = val * rate;
+
+        const targetSymbol = symbols[to] || '';
+        targetDisplay.textContent = targetSymbol + ' ' + formatNumber(converted, to);
+
+        directRateDisplay.textContent = '1 ' + from + ' = ' + formatNumber(rate, to) + ' ' + to;
+        inverseRateDisplay.textContent = '1 ' + to + ' = ' + formatNumber(inverseRate, from) + ' ' + from;
+        chartPairTitle.textContent = from + ' / ' + to;
+
+        // Dynamic min/max simulation based on rate
+        statMax.textContent = formatNumber(rate * 1.008, to);
+        statMin.textContent = formatNumber(rate * 0.992, to);
+      }
+
+      // Quick amount chips (+100, +500, etc.)
+      document.querySelectorAll('.chip-add').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const addVal = parseFloat(this.getAttribute('data-add')) || 0;
+          const curr = parseFloat(amountInput.value) || 0;
+          amountInput.value = curr + addVal;
+          calculate();
+        });
+      });
+
+      // Quick currency tabs
+      document.querySelectorAll('.quick-cur-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const cur = this.getAttribute('data-currency');
+          if (cur === sourceSelect.value) {
+            sourceSelect.value = targetSelect.value;
+          }
+          targetSelect.value = cur;
+          calculate();
+        });
+      });
+
+      // Swap button
+      swapBtn.addEventListener('click', function() {
+        const temp = sourceSelect.value;
+        sourceSelect.value = targetSelect.value;
+        targetSelect.value = temp;
+        calculate();
+      });
+
+      // Inputs change listeners
+      amountInput.addEventListener('input', calculate);
+      sourceSelect.addEventListener('change', calculate);
+      targetSelect.addEventListener('change', calculate);
+
+      // Save to history list
+      convertSaveBtn.addEventListener('click', function() {
+        const val = parseFloat(amountInput.value) || 0;
+        if (val <= 0) return;
+
+        const from = sourceSelect.value;
+        const to = targetSelect.value;
+        const rate = getExchangeRate(from, to);
+        const converted = val * rate;
+
+        const now = new Date();
+        const timeStr = 'Hoje, ' + ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
+
+        const newRow = document.createElement('tr');
+        newRow.className = 'hover:bg-surface-container transition-colors group animate-fade-in';
+        newRow.innerHTML = `
+          <td class="py-space-md px-space-lg font-tabular-numeric-md text-on-surface-variant">
+            ${timeStr}
+          </td>
+          <td class="py-space-md px-space-md">
+            <div class="flex items-center gap-space-xs font-label-md text-label-md font-semibold">
+              <span>${flags[from]}</span>
+              <span class="material-symbols-outlined text-[14px] text-tertiary">arrow_forward</span>
+              <span>${flags[to]}</span>
+            </div>
+          </td>
+          <td class="py-space-md px-space-md font-tabular-numeric-md font-semibold text-on-surface">
+            ${symbols[from]} ${formatNumber(val, from)}
+          </td>
+          <td class="py-space-md px-space-md font-tabular-numeric-md text-on-surface-variant">
+            ${formatNumber(rate, to)}
+          </td>
+          <td class="py-space-md px-space-md font-tabular-numeric-md font-bold text-primary">
+            ${symbols[to]} ${formatNumber(converted, to)}
+          </td>
+          <td class="py-space-md px-space-md">
+            <span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold">
+              <span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Concluído
+            </span>
+          </td>
+          <td class="py-space-md px-space-lg text-right">
+            <div class="flex items-center justify-end gap-1">
+              <button type="button" class="btn-repeat p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors" title="Repetir Conversão" data-source="${from}" data-target="${to}" data-amount="${val}">
+                <span class="material-symbols-outlined text-[18px]">replay</span>
+              </button>
+              <button type="button" class="btn-receipt p-1 rounded hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Exportar Comprovante">
+                <span class="material-symbols-outlined text-[18px]">receipt_long</span>
+              </button>
+            </div>
+          </td>
+        `;
+
+        historyTableBody.insertBefore(newRow, historyTableBody.firstChild);
+        bindRepeatButtons();
+
+        // Brief visual feedback on CTA
+        const prevText = convertSaveBtn.innerHTML;
+        convertSaveBtn.innerHTML = '<span class="material-symbols-outlined text-[20px]">done_all</span> Registrado!';
+        setTimeout(function() {
+          convertSaveBtn.innerHTML = prevText;
+        }, 1200);
+      });
+
+      // Repeat buttons binding
+      function bindRepeatButtons() {
+        document.querySelectorAll('.btn-repeat').forEach(function(btn) {
+          btn.onclick = function() {
+            const s = this.getAttribute('data-source');
+            const t = this.getAttribute('data-target');
+            const a = this.getAttribute('data-amount');
+            if (s && t && a) {
+              sourceSelect.value = s;
+              targetSelect.value = t;
+              amountInput.value = a;
+              calculate();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          };
+        });
+
+        document.querySelectorAll('.btn-receipt').forEach(function(btn) {
+          btn.onclick = function() {
+            alert('Comprovante oficial autenticado gerado com sucesso. Código Bacen #' + Math.floor(100000 + Math.random() * 900000));
+          };
+        });
+      }
+
+      // Clear history
+      clearHistoryBtn.addEventListener('click', function() {
+        if (confirm('Deseja limpar todos os registros do histórico recente?')) {
+          historyTableBody.innerHTML = `
+            <tr>
+              <td colspan="7" class="py-space-lg text-center text-on-surface-variant font-body-sm">
+                Nenhum registro no histórico. Salve novas conversões acima.
+              </td>
+            </tr>
+          `;
+        }
+      });
+
+      // Export CSV mock
+      exportHistoryBtn.addEventListener('click', function() {
+        alert('Download do relatório de câmbio iniciado (relatorio_cambio_prime.csv)');
+      });
+
+      // Initialize default
+      bindRepeatButtons();
+      calculate();
+    })();
+  </script>
+</div></main><footer class="w-full bg-surface-container-lowest py-space-xl mt-space-xl"><div class="w-full px-gutter-lg flex flex-col md:flex-row items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><span class="font-headline-sm text-headline-sm font-semibold text-on-surface">Câmbio Prime</span><span class="font-body-sm text-body-sm text-on-surface-variant">• Instituição Autorizada pelo Banco Central do Brasil</span></div><div class="flex items-center gap-space-lg"><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors px-space-xs py-space-xs rounded" href="#">Privacidade</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors px-space-xs py-space-xs rounded" href="#">Compliance &amp; PLD</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors px-space-xs py-space-xs rounded" href="#">Termos de Uso</a><span class="font-body-sm text-body-sm text-on-surface-variant">© 2024 Câmbio Prime. Todos os direitos reservados.</span></div></div></footer></body></html>
