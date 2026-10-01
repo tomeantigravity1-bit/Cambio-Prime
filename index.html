@@ -215,34 +215,33 @@
         timestamp: isFirebaseLive ? serverTimestamp() : new Date().toISOString()
       };
 
-      // Sempre salva no espelho LocalStorage para confiabilidade e velocidade
-      saveToLocalStorage(payload);
-
-      if (isFirebaseLive && db && currentUserId) {
+      if (isFirebaseLive && db) {
         try {
           const docRef = await addDoc(collection(db, 'conversions'), payload);
           return { success: true, id: docRef.id, mode: 'firestore' };
         } catch (e) {
           console.warn("Erro ao salvar no Firestore:", e);
+          saveToLocalStorage(payload);
           return { success: true, mode: 'local', error: e.message };
         }
       }
 
+      saveToLocalStorage(payload);
       return { success: true, mode: 'local' };
     }
 
-    // Escutar Histórico em Tempo Real com onSnapshot
+    // Escutar Histórico Global em Tempo Real com onSnapshot (Compartilhado entre todos os dispositivos)
     function listenToHistory(callback) {
       if (unsubscribeSnapshot) {
         unsubscribeSnapshot();
         unsubscribeSnapshot = null;
       }
 
-      if (isFirebaseLive && db && currentUserId) {
+      if (isFirebaseLive && db) {
         try {
+          // Busca global sem restrição de userId para histórico compartilhado
           const q = query(
             collection(db, 'conversions'),
-            where('userId', '==', currentUserId),
             orderBy('timestamp', 'desc')
           );
 
@@ -252,14 +251,37 @@
               const data = docSnap.data();
               items.push({ id: docSnap.id, ...data });
             });
+
+            // Ordenação decrescente robusta para tratar timestamps em trânsito
+            items.sort((a, b) => {
+              const timeA = a.timestamp?.seconds ? a.timestamp.seconds * 1000 : (a.timestamp ? new Date(a.timestamp).getTime() : Date.now());
+              const timeB = b.timestamp?.seconds ? b.timestamp.seconds * 1000 : (b.timestamp ? new Date(b.timestamp).getTime() : Date.now());
+              return timeB - timeA;
+            });
+
             callback(items, 'firestore');
           }, (err) => {
-            console.warn("Fallback onSnapshot para LocalStorage:", err.message);
-            callback(getFromLocalStorage(), 'local');
+            console.warn("Aviso na query com orderBy, tentando query direta:", err.message);
+            try {
+              unsubscribeSnapshot = onSnapshot(collection(db, 'conversions'), (snapshot) => {
+                const items = [];
+                snapshot.forEach((docSnap) => {
+                  items.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                items.sort((a, b) => {
+                  const timeA = a.timestamp?.seconds ? a.timestamp.seconds * 1000 : (a.timestamp ? new Date(a.timestamp).getTime() : Date.now());
+                  const timeB = b.timestamp?.seconds ? b.timestamp.seconds * 1000 : (b.timestamp ? new Date(b.timestamp).getTime() : Date.now());
+                  return timeB - timeA;
+                });
+                callback(items, 'firestore');
+              });
+            } catch (e2) {
+              callback(getFromLocalStorage(), 'local');
+            }
           });
           return;
         } catch (e) {
-          console.warn("Erro na query do Firestore:", e);
+          console.warn("Erro ao configurar onSnapshot:", e);
         }
       }
 
@@ -267,15 +289,13 @@
       callback(getFromLocalStorage(), 'local');
     }
 
-    // Limpar Histórico do Usuário
+    // Limpar Histórico do Firestore
     async function clearUserHistory() {
-      // Limpa local
       localStorage.removeItem('cambio_prime_history_mirror');
 
-      if (isFirebaseLive && db && currentUserId) {
+      if (isFirebaseLive && db) {
         try {
-          const q = query(collection(db, 'conversions'), where('userId', '==', currentUserId));
-          const snapshot = await getDocs(q);
+          const snapshot = await getDocs(collection(db, 'conversions'));
           const deletePromises = snapshot.docs.map(d => deleteDoc(doc(db, 'conversions', d.id)));
           await Promise.all(deletePromises);
         } catch (e) {
